@@ -1,0 +1,206 @@
+{\rtf1\ansi\deff0\nouicompat{\fonttbl{\f0\fnil\fcharset0 Calibri;}{\f1\fnil Calibri;}}
+{\*\generator Riched20 10.0.14393}\viewkind4\uc1 
+\pard\sa200\sl240\slmult1\f0\fs22\lang9 Binary Search Algorithm \f1\endash  Iterative and Recursive Implementation\par
+Given a sorted array of n integers and a target value, determine if the target exists in the array in logarithmic time using the binary search algorithm. If target exists in the array, print the index of it.\par
+\par
+For example,\par
+\par
+Input:\par
+ \par
+nums[] = [2, 3, 5, 7, 9]\par
+target = 7\par
+ \par
+Output: Element found at index 3\par
+ \par
+ \par
+Input:\par
+ \par
+nums[] = [1, 4, 5, 8, 9]\par
+target = 2\par
+ \par
+Output: Element not found\par
+Practice this problem\par
+\par
+A simple solution would be to perform a linear search on the given array. It sequentially checks each array element for the target value until a match is found or all the elements have been searched. The worst-case time complexity of this approach is O(n) as it makes at most n comparisons, where n is the size of the input. This approach doesn\rquote t take advantage of the fact that the input is sorted.\par
+\par
+How to perform better?\par
+The idea is to use binary search which is a Divide and Conquer algorithm. Like all divide-and-conquer algorithms, binary search first divides a large array into two smaller subarrays and then recursively (or iteratively) operate the subarrays. But instead of working on both subarrays, it discards one subarray and continues on the second subarray. This decision of discarding one subarray is made in just one comparison.\par
+\par
+ \par
+So binary search reduces the search space to half at each step. By search space, we mean a subarray of the given array where the target value is located (if present in the array). Initially, the search space is the entire array, and binary search redefines the search space at every step of the algorithm by using the property of the array that it is sorted. It does so by comparing the mid-value in the search space to the target value. If the target value matches the middle element, its position in the array is returned; otherwise, it discards half of the search space based on the comparison result.\par
+\par
+ \par
+Let\rquote s track the search space by using two indexes \endash  start and end. Initially, start = 0 and end = n-1 (as initially, the whole array is our search space). At each step, find the mid-value in the search space and compares it with the target. There are three possible cases:\par
+\par
+If target = nums[mid], return mid.\par
+If target < nums[mid], discard all elements in the right search space, including the middle element, i.e., nums[mid\'85high]. Now our new high would be mid-1.\par
+If target > nums[mid], discard all elements in the left search space, including the middle element, i.e., nums[low\'85mid]. Now our new low would be mid+1.\par
+Repeat the process until the target is found, or our search space is exhausted. Let\rquote s understand this by taking an example. Let\par
+\par
+nums = [2, 3, 5, 7, 8, 10, 12, 15, 18, 20]\par
+target = 7\par
+Binary Search \endash  Step 1\par
+ \par
+\par
+Binary Search \endash  Step 2\par
+\par
+ \par
+Binary Search \endash  Step 3\par
+\par
+1. Iterative Implementation\par
+The algorithm can be implemented iteratively as follows in C, Java, and Python:\par
+\par
+\par
+#include <stdio.h>\par
+ \par
+// Iterative implementation of the binary search algorithm to return\par
+// the position of `target` in array `nums` of size `n`\par
+int binarySearch(int nums[], int n, int target)\par
+\{\par
+    // search space is nums[low\'85high]\par
+    int low = 0, high = n - 1;\par
+ \par
+    // loop till the search space is exhausted\par
+    while (low <= high)\par
+    \{\par
+        // find the mid-value in the search space and\par
+        // compares it with the target\par
+ \par
+        int mid = (low + high)/2;    // overflow can happen\par
+        // int mid = low + (high - low)/2;\par
+        // int mid = high - (high - low)/2;\par
+ \par
+        // target value is found\par
+        if (target == nums[mid]) \{\par
+            return mid;\par
+        \}\par
+ \par
+        // if the target is less than the middle element, discard all elements\par
+        // in the right search space, including the middle element\par
+        else if (target < nums[mid]) \{\par
+            high = mid - 1;\par
+        \}\par
+ \par
+        // if the target is more than the middle element, discard all elements\par
+        // in the left search space, including the middle element\par
+        else \{\par
+            low = mid + 1;\par
+        \}\par
+    \}\par
+ \par
+    // target doesn't exist in the array\par
+    return -1;\par
+\}\par
+ \par
+int main(void)\par
+\{\par
+    int nums[] = \{ 2, 5, 6, 8, 9, 10 \};\par
+    int target = 5;\par
+ \par
+    int n = sizeof(nums)/sizeof(nums[0]);\par
+    int index = binarySearch(nums, n, target);\par
+ \par
+    if (index != -1) \{\par
+        printf("Element found at index %d", index);\par
+    \}\par
+    else \{\par
+        printf("Element not found in the array");\par
+    \}\par
+ \par
+    return 0;\par
+\}\par
+Download  Run Code\par
+\par
+Output:\par
+\par
+Element found at index 1\par
+\par
+2. Recursive Implementation\par
+We can easily convert the above iterative version of the binary search algorithm into a recursive one. The algorithm can be implemented recursively as follows in C, Java, and Python:\par
+\par
+\par
+#include <stdio.h>\par
+ \par
+// Recursive implementation of the binary search algorithm to return\par
+// the position of `target` in subarray nums[low\'85high]\par
+int binarySearch(int nums[], int low, int high, int target)\par
+\{\par
+    // Base condition (search space is exhausted)\par
+    if (low > high) \{\par
+        return -1;\par
+    \}\par
+ \par
+    // find the mid-value in the search space and\par
+    // compares it with the target\par
+ \par
+    int mid = (low + high)/2;    // overflow can happen\par
+    // int mid = low + (high - low)/2;\par
+ \par
+    // Base condition (target value is found)\par
+    if (target == nums[mid]) \{\par
+        return mid;\par
+    \}\par
+ \par
+    // discard all elements in the right search space,\par
+    // including the middle element\par
+    else if (target < nums[mid]) \{\par
+        return binarySearch(nums, low, mid - 1, target);\par
+    \}\par
+ \par
+    // discard all elements in the left search space,\par
+    // including the middle element\par
+    else \{\par
+        return binarySearch(nums, mid + 1, high, target);\par
+    \}\par
+\}\par
+ \par
+int main(void)\par
+\{\par
+    int nums[] = \{ 2, 5, 6, 8, 9, 10 \};\par
+    int target = 5;\par
+ \par
+    int n = sizeof(nums)/sizeof(nums[0]);\par
+ \par
+    int low = 0, high = n - 1;\par
+    int index = binarySearch(nums, low, high, target);\par
+ \par
+    if (index != -1) \{\par
+        printf("Element found at index %d", index);\par
+    \}\par
+    else \{\par
+        printf("Element not found in the array");\par
+    \}\par
+ \par
+    return 0;\par
+\}\par
+Download  Run Code\par
+\par
+Output:\par
+\par
+Element found at index 1\par
+\par
+Performance of Binary Search\par
+We know that at each step of the algorithm, our search space reduces to half. That means if initially, our search space contains n elements, then after one iteration it contains n/2, then n/4 and so on\'85\par
+\par
+n \emdash > n/2 \emdash > n/4 \emdash > \'85 \emdash > 1\par
+Suppose our search space is exhausted after k steps. Then,\par
+\par
+n/2k = 1\par
+n = 2k\par
+k = log2n\par
+Therefore, the time complexity of the binary search algorithm is O(log2n), which is very efficient. The auxiliary space required by the program is O(1) for iterative implementation and O(log2n) for recursive implementation due to call stack.\par
+\par
+Avoid Integer Overflow\par
+The signed int in C/C++ takes up 4 bytes of storage, i.e., It allows storage for integers between -2147483648 and 2147483647. Note that some compilers might take up 2 bytes storage as well. The exact value can be found by sizeof(int).\par
+\par
+So, if (low + high) > 2147483647, integer overflow will happen.\par
+\par
+int mid = (low + high)/2;    // overflow can happen\par
+To avoid integer overflow, we can use any of the following expressions:\par
+\par
+int mid = low + (high \endash  low)/2;    OR\par
+int mid = high \endash  (high \endash  low)/2;\par
+
+\pard\ri-1158\sa200\sl240\slmult1\tx9372\tx9798 Now, low + (high - low) / 2 or high - (high - low) / 2 always computes a valid index halfway between high and low, and overflow will never happen even for extreme values.\f0\par
+}
+ 
