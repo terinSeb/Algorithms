@@ -25,6 +25,7 @@ int main()
     cout << temp;cout <<" " ;
      cout <<"OutPut3: " ;
      cout << temp -> data ;
+     A = temp;
 
     return 0;
 }
