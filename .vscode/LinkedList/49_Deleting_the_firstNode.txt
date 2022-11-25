@@ -1,0 +1,47 @@
+// Online C compiler to run C program online
+#include <stdio.h>
+#include <stdlib.h>
+struct node {
+    int data;
+    struct node *link;
+};
+void add_Beg(struct node **head,int data){
+    struct node *beg = malloc(sizeof(struct node));
+    beg->data = data;
+    beg->link = *head;
+    *head = beg;
+}
+struct node* del_first(struct node* head){
+    if(head == NULL){
+        printf("List is already empty");
+    }
+    else{
+        struct node* temp = head;
+        head = head-> link;
+        free(temp);
+        temp = NULL;
+    }
+    return head;
+}
+int main() {
+    struct node *head = malloc(sizeof(struct node));
+    head->data = 45;
+    head->link = NULL;
+    struct node *ptr = malloc(sizeof(struct node));
+    ptr->data = 78;
+    ptr->link = NULL;
+    head->link = ptr;
+    add_Beg(&head,99);
+    ptr = head;
+    while(ptr != NULL){
+        printf("%d ",ptr->data);
+        ptr = ptr->link;
+    }
+    ptr = del_first(head);
+    printf("After deleting first Node: ");
+    while(ptr != NULL){
+        printf("%d ",ptr->data);
+        ptr = ptr->link;
+    }
+    return 0;
+}
